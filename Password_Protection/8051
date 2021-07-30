@@ -1,0 +1,99 @@
+#include<reg51.h>
+unsigned char pw[]="1234";
+unsigned char wrong[]="WRONG PASSWORD!TRY AGAIN!!";
+unsigned char correct[]="CORRECT PASSWORD!WELCOME!!";
+unsigned char arr1[]="ENTER PASSWORD";
+unsigned char check[4];
+unsigned char b='*';
+sbit a=P1^4;
+    unsigned int x;
+		unsigned int y;
+		unsigned int z;
+		unsigned int flag;
+void delay1()
+{
+	unsigned int d;
+  for(d=0;d<20000;d++);
+}
+void delay()
+{
+   TMOD=0x20;
+	for(x=0;x<7;x++)
+	 TH1=0;
+	 TR1=1;
+	 while(TF1==0);
+	 TF1=0;
+	 TR1=0;
+}
+void main()
+{
+SCON=0x50;
+TMOD=0x20;
+TH1=0xFD;
+TR1=1;
+a=0;
+	for(x=0;x<14;x++)
+	{
+	   SBUF=arr1[x];
+	   while(TI==0);
+	   TI=0;
+	}
+  SBUF=0x0D;
+	while(TI==0);
+	TI=0;
+	for(y=0;y<4;y++)
+	{
+		while(RI==0);
+		
+    check[y]=SBUF;
+    RI=0;
+		SBUF=y;
+		SBUF='*';
+		while(TI==0);
+		TI=0;
+	}
+
+
+	SBUF=0x0D;
+	while(TI==0);
+	TI=0;
+	for(z=0;z<4;z++)
+	{
+	if(check[z]==pw[z])
+	{
+		flag=flag+1;
+	}
+}
+	if(flag==4)
+	{
+			unsigned int m;
+		flag=0;
+	a=1;
+	 for(m=0;m<27;m++)
+	 {
+	  SBUF=correct[m];
+	  while(TI==0);
+	  TI=0;
+	  }
+  delay1();
+	SBUF=0x0D;
+	while(TI==0);
+	TI=0;
+	}	
+  else 
+	{
+		 unsigned int n;
+		flag=0;
+	
+	 for(n=0;n<27;n++)
+	 {
+	  SBUF=wrong[n];
+	  while(TI==0);
+	  TI=0;
+	  }
+	}
+	SBUF=0x0D;
+	while(TI==0);
+	TI=0;
+}
+	
