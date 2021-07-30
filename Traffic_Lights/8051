@@ -1,0 +1,51 @@
+#include <reg51.h>
+void delay()
+{
+	unsigned int x;
+TMOD=0x01;
+
+ 
+  for(x=0;x<3;x++)
+   {
+    TH0=0;
+	TL0=0;
+	TR0=1;
+	while(TF0==0);
+	TF0=0;
+	TR0=0;
+
+  }
+}
+void count()
+{
+ unsigned int i;
+ for(i=6;i>0;i--)
+ {
+  P1=i-1;
+	delay();
+ }
+}
+void main()
+{
+	
+ while(1)
+ {
+  P2=0x89;
+	P3=0x08;
+  delay();
+	 count();
+	P2=0x11;
+	P3=0x03;
+  delay();
+count();
+	P2=0x62;
+	P3=0x02;
+	delay();
+ count();
+	P2=0x4C;
+	P3=0x04;
+  delay();
+ 
+count();
+ }
+}
