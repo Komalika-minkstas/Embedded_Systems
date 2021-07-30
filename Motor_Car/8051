@@ -1,0 +1,136 @@
+#include<reg51.h>
+sbit l=P1^3;
+sbit m=P1^4;
+sbit n=P1^5;
+sbit o=P1^6;
+sbit rs=P1^0;
+sbit rw=P1^1;
+sbit en=P1^2;
+unsigned int cmmd[]={0x38,0x0E,0x01,0x06,0x80,0x01};
+unsigned char a;
+unsigned int b,c;
+unsigned char data1[]="FORWARD";
+unsigned char data2[]="BACKWARD";
+unsigned char data3[]="LEFT";
+unsigned char data4[]="RIGHT";
+unsigned char data5[]="STOP";
+void delay()
+{
+  unsigned int x;
+  for(x=0;x<10000;x++);
+}
+void cmm()
+{
+  rs=0;
+  rw=0;
+  en=1;
+  delay();
+  en=0;
+}
+void dat()
+{
+  rs=1;
+  rw=0;
+  en=1;
+  delay();
+  en=0;
+}
+void main()
+{
+  SCON=0x50;
+  TMOD=0x20;
+  TH1=0xFD;
+  TR1=1;
+    while(RI==0);
+	a=SBUF;
+	RI=0;
+	l=m=n=o=0;
+	if(a=='F')
+	{
+	  l=1;
+	  m=0;
+	  n=1;
+	  o=0;
+    for(b=0;b<6;b++)
+    {
+      P2=cmmd[b];
+      cmm();
+     }
+    for(c=0;c<sizeof data1;c++)
+	{
+	  P2=data1[c];
+	  dat();
+	}
+	l=m=n=o=0;
+  }
+	else if(a=='B')
+	{
+	  l=0;
+	  m=1;
+	  n=0;
+	  o=1;
+	for(b=0;b<6;b++)
+    {
+      P2=cmmd[b];
+      cmm();
+     }
+    for(c=0;c<sizeof data2;c++)
+	{
+	  P2=data2[c];
+	  dat();
+	}
+	l=m=n=o=0;
+  }
+	
+	else if(a=='R')
+	{
+	  l=0;
+	  m=0;
+	  n=1;
+	  o=0;
+	  for(b=0;b<6;b++)
+    {
+      P2=cmmd[b];
+      cmm();
+     }
+   for(c=0;c<sizeof data4;c++)
+	{
+	  P2=data4[c];
+	  dat();
+	}
+	l=m=n=o=0;
+  }
+	else if(a=='L')
+	{
+	  l=1;
+	  m=0;
+	  n=0;
+	  o=0;
+	  for(b=0;b<6;b++)
+    {
+      P2=cmmd[b];
+      cmm();
+     }
+   for(c=0;c<sizeof data3;c++)
+	{
+	  P2=data3[c];
+	  dat();
+	}
+	l=m=n=o=0;
+	}
+	else if(a=='S')
+	{
+	  l=m=n=o=0;
+	   for(b=0;b<6;b++)
+    {
+      P2=cmmd[b];
+      cmm();
+     }
+   for(c=0;c<sizeof data5;c++)
+	{
+	  P2=data5[c];
+	  dat();
+	}
+	l=m=n=o=0;
+	}
+}
