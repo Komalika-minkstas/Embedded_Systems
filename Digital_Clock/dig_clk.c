@@ -64,38 +64,32 @@
 #include <xc.h>
 #define _XTAL_FREQ 20000000
 
-unsigned int h1,h2,m1,m2,s;
-unsigned char arr[]={0xFC,0x60,0xDA,0xF2,0x66,0xB6,0xBE,0xE0,0xFE,0xF6};
-
+unsigned int h,m,s;
+int display_decimal(int time){
+int temp=0;
+while(time>9)
+{
+   time-=10;
+	 temp+=0x10;
+}
+	return (temp|time);
+}
 void main()
 {
-    TRISA=0;
     TRISB=0;
     TRISC=0;
     TRISD=0;
-    h1=h2=m1=m2=arr[0];
-  for(h2=0x01;h2<2;h2++)
+  for(h=0x01;h<0xC;h++)
   {
-   for(h1=1;h1<10;h1++)
-   {
-    for(m2=1;m2<6;m2++)
+    for(m=0x01;m<0x3C;m++)
 	{
-     for(m1=1;m1<10;m1++)
-     {
 	  for(s=0;s<0x3C;s++)
 	  {
+			PORTD=display_decimal(s);
 			__delay_ms(1000);
 	  }
-      PORTD=arr[m1];
+	   PORTC=display_decimal(m);
 	}
-     m1=0;
-	   PORTC=arr[m2];
-	
+	PORTB=display_decimal(h);
  }
-    m2=0;
-    PORTA=arr[h1];
-}
-   h1=0;
-   PORTB=arr[h2];
-  }
 }
