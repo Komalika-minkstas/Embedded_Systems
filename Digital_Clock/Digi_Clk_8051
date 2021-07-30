@@ -1,0 +1,44 @@
+#include<reg51.h>
+unsigned int h,m,s;
+void delay()
+{
+unsigned int x;
+TMOD=0x01;
+
+ 
+for(x=0;x<14;x++)
+  {
+  TH0=0;
+	TL0=0;
+	TR0=1;
+	while(TF0==0);
+	TF0=0;
+	TR0=0;
+  }
+}
+
+int display_decimal(int time){
+int temp=0;
+while(time>9)
+{
+   time-=10;
+	 temp+=0x10;
+}
+	return (temp|time);
+}
+void main()
+{
+  for(h=0x01;h<0xC;h++)
+  {
+    for(m=0x01;m<0x3C;m++)
+	{
+	  for(s=0;s<0x3C;s++)
+	  {
+			P3=display_decimal(s);
+			delay();
+	  }
+	   P2=display_decimal(m);
+	}
+	P1=display_decimal(h);
+ }
+}
